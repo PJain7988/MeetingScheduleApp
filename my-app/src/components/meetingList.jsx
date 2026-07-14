@@ -2,7 +2,7 @@ import React from 'react';
 import { useMeetingStore } from '../store/meetingStore';
 import dayjs from 'dayjs';
 
-const MeetingList = ({ onEdit }) => {
+const MeetingList = ({ onEdit, selectedDate }) => {
   const meetings = useMeetingStore((state) => state.meetings);
   const deleteMeeting = useMeetingStore((state) => state.deleteMeeting);
 
@@ -12,7 +12,12 @@ const MeetingList = ({ onEdit }) => {
     }
   };
 
-  if (meetings.length === 0) {
+  // Filter meetings by selectedDate if one is selected
+  const filteredMeetings = selectedDate 
+    ? meetings.filter(m => dayjs(m.start).isSame(dayjs(selectedDate), 'day'))
+    : meetings;
+
+  if (filteredMeetings.length === 0) {
     return (
       <div className="bg-white/60 backdrop-blur-sm border border-dashed border-slate-300 rounded-3xl p-16 text-center">
         <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -20,14 +25,18 @@ const MeetingList = ({ onEdit }) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
         </div>
-        <h3 className="text-lg font-medium text-slate-900 mb-1">No upcoming meetings</h3>
-        <p className="text-slate-500">Your schedule is clear. Enjoy your day!</p>
+        <h3 className="text-lg font-medium text-slate-900 mb-1">
+          {selectedDate ? `No meetings on ${dayjs(selectedDate).format('MMM D, YYYY')}` : 'No upcoming meetings'}
+        </h3>
+        <p className="text-slate-500">
+          {selectedDate ? 'Enjoy your free time!' : 'Your schedule is clear. Enjoy your day!'}
+        </p>
       </div>
     );
   }
 
   // Sort meetings by start date
-  const sortedMeetings = [...meetings].sort((a, b) => new Date(a.start) - new Date(b.start));
+  const sortedMeetings = [...filteredMeetings].sort((a, b) => new Date(a.start) - new Date(b.start));
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -79,7 +88,6 @@ const MeetingList = ({ onEdit }) => {
               <div>
                 <div className="text-xs text-slate-500 font-medium mb-2">Attendees</div>
                 <div className="flex -space-x-2 overflow-hidden">
-                  {/* Fake avatars based on participants string for UI mockup accuracy */}
                   {meeting.participants.split(',').slice(0,4).map((p, i) => (
                     <img 
                       key={i} 
