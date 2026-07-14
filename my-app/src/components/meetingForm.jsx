@@ -41,6 +41,7 @@ const MeetingForm = ({ editMeetingData, editingIndex, onCancelEdit }) => {
     } else {
       addMeeting({ title, participants, start, end });
       toast.success('Meeting scheduled successfully!');
+      onCancelEdit(); // Close modal after adding
     }
     
     setTitle('');
@@ -58,11 +59,11 @@ const MeetingForm = ({ editMeetingData, editingIndex, onCancelEdit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow-xl shadow-slate-200/50 p-6 sm:p-8 rounded-2xl space-y-6 border border-slate-100">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div>
         <label className="block text-sm font-medium text-slate-700 mb-2">Meeting Title</label>
         <input
-          className="w-full border-slate-200 bg-slate-50 border p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-800 placeholder-slate-400"
+          className="w-full border-slate-200 bg-slate-50/50 border p-3 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-800 placeholder-slate-400"
           type="text"
           placeholder="e.g. Weekly Sync, Project Review"
           value={title}
@@ -70,9 +71,9 @@ const MeetingForm = ({ editMeetingData, editingIndex, onCancelEdit }) => {
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-2">Participants</label>
+        <label className="block text-sm font-medium text-slate-700 mb-2">Participants (comma-separated)</label>
         <input
-          className="w-full border-slate-200 bg-slate-50 border p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-800 placeholder-slate-400"
+          className="w-full border-slate-200 bg-slate-50/50 border p-3 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-800 placeholder-slate-400"
           type="text"
           placeholder="e.g. John, Sarah, Mike"
           value={participants}
@@ -87,7 +88,7 @@ const MeetingForm = ({ editMeetingData, editingIndex, onCancelEdit }) => {
             onChange={(date) => setStart(date)}
             showTimeSelect
             dateFormat="MMM d, yyyy h:mm aa"
-            className="w-full border-slate-200 bg-slate-50 border p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-800"
+            className="w-full border-slate-200 bg-slate-50/50 border p-3 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-800"
           />
         </div>
         <div className="flex-1">
@@ -97,26 +98,24 @@ const MeetingForm = ({ editMeetingData, editingIndex, onCancelEdit }) => {
             onChange={(date) => setEnd(date)}
             showTimeSelect
             dateFormat="MMM d, yyyy h:mm aa"
-            className="w-full border-slate-200 bg-slate-50 border p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-800"
+            className="w-full border-slate-200 bg-slate-50/50 border p-3 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-800"
           />
         </div>
       </div>
-      <div className="pt-2 flex gap-3">
+      <div className="pt-4 flex gap-3">
         <button 
           type="submit" 
-          className="flex-1 bg-indigo-600 text-white font-medium px-4 py-3 rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-200 transition-all active:scale-[0.98]"
+          className="flex-1 bg-indigo-600 text-white font-medium px-4 py-3 rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-200/50 transition-all active:scale-[0.98]"
         >
           {editingIndex !== null ? 'Save Changes' : 'Schedule Meeting'}
         </button>
-        {editingIndex !== null && (
-          <button 
-            type="button"
-            onClick={handleCancel}
-            className="flex-1 bg-white text-slate-700 font-medium px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all active:scale-[0.98]"
-          >
-            Cancel
-          </button>
-        )}
+        <button 
+          type="button"
+          onClick={handleCancel}
+          className="flex-1 bg-white text-slate-700 font-medium px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all active:scale-[0.98]"
+        >
+          Cancel
+        </button>
       </div>
     </form>
   );
