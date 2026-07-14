@@ -12,4 +12,8 @@ export const useMeetingStore = create((set) => ({
         m.id === id ? { ...m, ...updatedData } : m
       ),
     })),
+  deleteMeeting: (id) =>
+    set((state) => ({
+      meetings: state.meetings.filter((m) => m.id !== id),
+    })),
 }));
