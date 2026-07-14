@@ -1,3 +1,73 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Professional overrides for react-datepicker to match SyncSpace theme */
+.react-datepicker {
+  font-family: inherit !important;
+  border: none !important;
+  background-color: transparent !important;
+  width: 100%;
+}
+
+.react-datepicker__header {
+  background-color: transparent !important;
+  border-bottom: none !important;
+  padding-top: 1rem !important;
+}
+
+.react-datepicker__current-month {
+  color: #1e293b !important;
+  font-weight: 700 !important;
+  font-size: 1.125rem !important;
+  margin-bottom: 0.5rem;
+}
+
+.react-datepicker__day-name {
+  color: #64748b !important;
+  font-weight: 600 !important;
+  width: 2.5rem !important;
+  line-height: 2.5rem !important;
+}
+
+.react-datepicker__day {
+  color: #334155 !important;
+  width: 2.5rem !important;
+  line-height: 2.5rem !important;
+  border-radius: 50% !important;
+  transition: all 0.2s !important;
+}
+
+.react-datepicker__day:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.react-datepicker__day--selected, 
+.react-datepicker__day--keyboard-selected {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  color: white !important;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3) !important;
+}
+
+.react-datepicker__navigation {
+  top: 1rem !important;
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: #94a3b8 !important;
+}
+
+.react-datepicker__navigation:hover .react-datepicker__navigation-icon::before {
+  border-color: #4f46e5 !important;
+}
+
+/* Make sure the month container spans full width */
+.react-datepicker__month-container {
+  width: 100% !important;
+  float: none !important;
+}
+
+.react-datepicker__month {
+  margin: 0 !important;
+  padding: 0.5rem !important;
+}
