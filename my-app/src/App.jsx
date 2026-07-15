@@ -12,6 +12,7 @@ import DatePicker from 'react-datepicker';
 
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
   const [editMeetingData, setEditMeetingData] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -55,7 +56,7 @@ const App = () => {
       default:
         return (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
               <h2 className="text-2xl font-bold text-slate-900">Upcoming Meetings</h2>
               <div className="flex items-center gap-4">
                 <button
@@ -79,7 +80,7 @@ const App = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               {/* Calendar Widget */}
               <div className="lg:col-span-4 2xl:col-span-3">
-                <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 sticky top-28">
+                <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 lg:sticky top-28 overflow-x-auto">
                   <DatePicker
                     selected={selectedDate}
                     onChange={(date) => setSelectedDate(date)}
@@ -99,58 +100,86 @@ const App = () => {
     }
   };
 
+  const SidebarContent = () => (
+    <>
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-500 shadow-lg shadow-indigo-200 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <h1 className="text-xl font-bold text-slate-900 tracking-tight">SyncSpace</h1>
+      </div>
+
+      <nav className="flex flex-col gap-2 flex-1">
+        {navItems.map((item, i) => {
+          const isActive = activeTab === item.label;
+          return (
+            <button
+              key={i}
+              onClick={() => {
+                setActiveTab(item.label);
+                setIsMobileMenuOpen(false); // Close menu on mobile after navigation
+              }}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                isActive 
+                  ? 'bg-gradient-to-r from-violet-500/10 to-indigo-500/10 text-indigo-600' 
+                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                {item.icon.includes('M10.325') && <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />}
+                {!item.icon.includes('M10.325') && <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />}
+              </svg>
+              {item.label}
+            </button>
+          );
+        })}
+      </nav>
+    </>
+  );
+
   return (
-    <div className="flex min-h-screen bg-[#f3f4f6] text-slate-800 font-sans">
+    <div className="flex min-h-screen bg-[#f3f4f6] text-slate-800 font-sans relative">
       <ToastContainer position="top-right" autoClose={3000} />
       
-      {/* Sidebar */}
-      <aside className="w-64 bg-white/60 backdrop-blur-xl border-r border-slate-200/60 p-6 flex flex-col gap-8 hidden md:flex sticky top-0 h-screen">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-500 shadow-lg shadow-indigo-200 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">SyncSpace</h1>
-        </div>
-
-        <nav className="flex flex-col gap-2">
-          {navItems.map((item, i) => {
-            const isActive = activeTab === item.label;
-            return (
-              <button
-                key={i}
-                onClick={() => setActiveTab(item.label)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                  isActive 
-                    ? 'bg-gradient-to-r from-violet-500/10 to-indigo-500/10 text-indigo-600' 
-                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
-                }`}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  {item.icon.includes('M10.325') && <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />}
-                  {!item.icon.includes('M10.325') && <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />}
-                </svg>
-                {item.label}
-              </button>
-            );
-          })}
-        </nav>
+      {/* Desktop Sidebar */}
+      <aside className="w-64 bg-white/60 backdrop-blur-xl border-r border-slate-200/60 p-6 flex-col gap-8 hidden lg:flex sticky top-0 h-screen z-20">
+        <SidebarContent />
       </aside>
 
+      {/* Mobile Sidebar Overlay */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 bg-slate-900/40 z-40 lg:hidden backdrop-blur-sm transition-opacity" onClick={() => setIsMobileMenuOpen(false)}>
+          <aside className="w-72 bg-white h-screen p-6 flex flex-col gap-8 absolute left-0 top-0 shadow-2xl animate-in slide-in-from-left duration-300" onClick={(e) => e.stopPropagation()}>
+             <SidebarContent />
+          </aside>
+        </div>
+      )}
+
       {/* Main Content */}
-      <main className="flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col w-full overflow-x-hidden">
         {/* Header */}
-        <header className="h-20 bg-white/60 backdrop-blur-xl border-b border-slate-200/60 px-8 flex items-center justify-between sticky top-0 z-10">
-          <div className="relative w-96">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input 
-              type="text" 
-              placeholder="Search" 
-              className="w-full bg-slate-100/50 border border-slate-200 text-slate-800 text-sm rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
-            />
+        <header className="h-20 bg-white/60 backdrop-blur-xl border-b border-slate-200/60 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-10">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="lg:hidden p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <div className="relative w-full max-w-[200px] sm:max-w-xs md:max-w-96 hidden sm:block">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input 
+                type="text" 
+                placeholder="Search" 
+                className="w-full bg-slate-100/50 border border-slate-200 text-slate-800 text-sm rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+              />
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold overflow-hidden border border-indigo-200">
@@ -164,15 +193,15 @@ const App = () => {
         </header>
 
         {/* Dynamic Content */}
-        <div className="p-8 max-w-7xl mx-auto w-full flex-1">
+        <div className="p-4 sm:p-8 max-w-7xl mx-auto w-full flex-1">
           {renderContent()}
         </div>
       </main>
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
-          <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm overflow-y-auto">
+          <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-8">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between">
               <h3 className="text-lg font-semibold text-slate-900">
                 {editingIndex !== null ? 'Edit Meeting' : 'Schedule New Meeting'}
