@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import MeetingForm from './components/meetingForm';
 import MeetingList from './components/meetingList';
+import ScheduleView from './components/views/ScheduleView';
+import CalendarView from './components/views/CalendarView';
+import MeetingsView from './components/views/MeetingsView';
+import AnalyticsView from './components/views/AnalyticsView';
+import SettingsView from './components/views/SettingsView';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DatePicker from 'react-datepicker';
@@ -32,6 +37,67 @@ const App = () => {
     { icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', label: 'Analytics' },
     { icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z', label: 'Settings' },
   ];
+
+  // Helper function to render active tab content
+  const renderContent = () => {
+    switch(activeTab) {
+      case 'Schedule':
+        return <ScheduleView openModal={() => setIsModalOpen(true)} />;
+      case 'Calendar':
+        return <CalendarView openModal={() => setIsModalOpen(true)} />;
+      case 'Meetings':
+        return <MeetingsView />;
+      case 'Analytics':
+        return <AnalyticsView />;
+      case 'Settings':
+        return <SettingsView />;
+      case 'Dashboard':
+      default:
+        return (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl font-bold text-slate-900">Upcoming Meetings</h2>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setSelectedDate(null)}
+                  className="text-sm text-indigo-600 font-medium hover:text-indigo-800 transition-colors"
+                >
+                  Clear Filter
+                </button>
+                <button 
+                  onClick={() => setIsModalOpen(true)}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-medium text-sm shadow-lg shadow-indigo-200/50 flex items-center gap-2 transition-all active:scale-95"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Schedule Meeting
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+              {/* Calendar Widget */}
+              <div className="lg:col-span-4 2xl:col-span-3">
+                <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 sticky top-28">
+                  <DatePicker
+                    selected={selectedDate}
+                    onChange={(date) => setSelectedDate(date)}
+                    inline
+                    calendarClassName="w-full border-none shadow-none text-slate-800"
+                  />
+                </div>
+              </div>
+              
+              {/* Meeting List */}
+              <div className="lg:col-span-8 2xl:col-span-9">
+                <MeetingList onEdit={handleEdit} selectedDate={selectedDate} />
+              </div>
+            </div>
+          </div>
+        );
+    }
+  };
 
   return (
     <div className="flex min-h-screen bg-[#f3f4f6] text-slate-800 font-sans">
@@ -97,67 +163,9 @@ const App = () => {
           </div>
         </header>
 
-        {/* Dashboard Content */}
+        {/* Dynamic Content */}
         <div className="p-8 max-w-7xl mx-auto w-full flex-1">
-          {activeTab === 'Dashboard' ? (
-            <>
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-bold text-slate-900">Upcoming Meetings</h2>
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => setSelectedDate(null)}
-                    className="text-sm text-indigo-600 font-medium hover:text-indigo-800 transition-colors"
-                  >
-                    Clear Filter
-                  </button>
-                  <button 
-                    onClick={() => setIsModalOpen(true)}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-medium text-sm shadow-lg shadow-indigo-200/50 flex items-center gap-2 transition-all active:scale-95"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    Schedule Meeting
-                  </button>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                {/* Calendar Widget */}
-                <div className="lg:col-span-4 2xl:col-span-3">
-                  <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 sticky top-28">
-                    <DatePicker
-                      selected={selectedDate}
-                      onChange={(date) => setSelectedDate(date)}
-                      inline
-                      calendarClassName="w-full border-none shadow-none text-slate-800"
-                    />
-                  </div>
-                </div>
-                
-                {/* Meeting List */}
-                <div className="lg:col-span-8 2xl:col-span-9">
-                  <MeetingList onEdit={handleEdit} selectedDate={selectedDate} />
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="flex flex-col items-center justify-center h-96 text-center">
-              <div className="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">{activeTab} Module</h2>
-              <p className="text-slate-500 max-w-md">This feature is currently under development. Please check back later or return to the Dashboard.</p>
-              <button 
-                onClick={() => setActiveTab('Dashboard')}
-                className="mt-6 text-indigo-600 font-medium hover:text-indigo-800 transition-colors"
-              >
-                Return to Dashboard
-              </button>
-            </div>
-          )}
+          {renderContent()}
         </div>
       </main>
 
