@@ -46,7 +46,7 @@ const App = () => {
       case 'Calendar':
         return <CalendarView openModal={() => setIsModalOpen(true)} />;
       case 'Meetings':
-        return <MeetingsView />;
+        return <MeetingsView onEdit={handleEdit} />;
       case 'Analytics':
         return <AnalyticsView />;
       case 'Settings':
