@@ -185,16 +185,92 @@ const SettingsView = () => {
               </div>
             )}
 
-            {/* Other Tabs Placeholder */}
-            {['Integrations', 'Billing', 'Advanced'].includes(activeTab) && (
-              <div className="animate-in fade-in duration-300 h-full flex flex-col items-center justify-center pt-20 text-center">
-                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                  </svg>
+            {/* Integrations Tab */}
+            {activeTab === 'Integrations' && (
+              <div className="animate-in fade-in duration-300">
+                <h3 className="text-lg font-semibold text-slate-900 mb-6 border-b border-slate-100 pb-4">Connected Integrations</h3>
+                <div className="space-y-4">
+                  {[
+                    { name: 'Google Calendar', status: 'Connected', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', color: 'text-blue-500' },
+                    { name: 'Slack', status: 'Connect', icon: 'M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z', color: 'text-rose-500' },
+                    { name: 'Zoom', status: 'Connect', icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z', color: 'text-blue-400' }
+                  ].map(integration => (
+                    <div key={integration.name} className="flex items-center justify-between p-4 border border-slate-100 rounded-2xl hover:border-indigo-100 transition-colors">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center ${integration.color}`}>
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={integration.icon} />
+                          </svg>
+                        </div>
+                        <div className="font-medium text-slate-900">{integration.name}</div>
+                      </div>
+                      <button className={`px-4 py-2 text-sm font-medium rounded-xl transition-colors ${integration.status === 'Connected' ? 'bg-green-50 text-green-700' : 'bg-slate-50 text-slate-700 hover:bg-slate-100'}`}>
+                        {integration.status}
+                      </button>
+                    </div>
+                  ))}
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">{activeTab} settings coming soon</h3>
-                <p className="text-slate-500 max-w-sm">We are currently building out this section. Check back later for updates to your {activeTab.toLowerCase()} configuration.</p>
+              </div>
+            )}
+
+            {/* Billing Tab */}
+            {activeTab === 'Billing' && (
+              <div className="animate-in fade-in duration-300">
+                <h3 className="text-lg font-semibold text-slate-900 mb-6 border-b border-slate-100 pb-4">Plan & Billing</h3>
+                <div className="bg-gradient-to-r from-violet-600 to-indigo-600 rounded-2xl p-6 text-white mb-8 shadow-lg shadow-indigo-200">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <div className="text-indigo-100 text-sm font-medium mb-1">Current Plan</div>
+                      <div className="text-2xl font-bold">Pro Workspace</div>
+                    </div>
+                    <div className="bg-white/20 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">
+                      Active
+                    </div>
+                  </div>
+                  <div className="text-indigo-100 text-sm">
+                    Next billing date: <strong>August 1, 2026</strong>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <h4 className="font-medium text-slate-900">Payment Method</h4>
+                  <div className="flex items-center justify-between p-4 border border-slate-100 rounded-2xl">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-8 bg-slate-100 rounded flex items-center justify-center font-bold text-slate-500 text-xs">VISA</div>
+                      <div>
+                        <div className="text-sm font-medium text-slate-900">•••• •••• •••• 4242</div>
+                        <div className="text-xs text-slate-500">Expires 12/28</div>
+                      </div>
+                    </div>
+                    <button className="text-indigo-600 text-sm font-medium hover:underline">Update</button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Advanced Tab */}
+            {activeTab === 'Advanced' && (
+              <div className="animate-in fade-in duration-300">
+                <h3 className="text-lg font-semibold text-rose-600 mb-6 border-b border-slate-100 pb-4">Danger Zone</h3>
+                <div className="space-y-6">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h4 className="font-medium text-slate-900">Export Data</h4>
+                      <p className="text-sm text-slate-500 mt-1 max-w-sm">Download a copy of all your scheduled meetings and account data.</p>
+                    </div>
+                    <button className="px-4 py-2 bg-slate-50 border border-slate-200 text-slate-700 text-sm font-medium rounded-xl hover:bg-slate-100 transition-colors">
+                      Request Export
+                    </button>
+                  </div>
+                  <div className="flex items-start justify-between pt-4 border-t border-slate-100">
+                    <div>
+                      <h4 className="font-medium text-slate-900">Delete Account</h4>
+                      <p className="text-sm text-slate-500 mt-1 max-w-sm">Permanently delete your account and all associated data. This action cannot be undone.</p>
+                    </div>
+                    <button className="px-4 py-2 bg-rose-50 text-rose-600 text-sm font-medium rounded-xl hover:bg-rose-100 transition-colors">
+                      Delete Account
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
 
