@@ -1,18 +1,21 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useMeetingStore } from '../../store/meetingStore';
 
 const SettingsView = () => {
   const [activeTab, setActiveTab] = useState('Profile');
   
-  // Profile State
-  const [profile, setProfile] = useState({
-    firstName: 'Sarah',
-    lastName: 'Jenkins',
-    email: 'sarah.jenkins@example.com',
-    bio: 'Product Manager focused on building excellent user experiences.',
-    avatarUrl: 'https://ui-avatars.com/api/?name=Sarah+Jenkins&background=e0e7ff&color=4338ca&size=80'
-  });
+  // Global Profile State
+  const globalProfile = useMeetingStore(state => state.userProfile);
+  const updateProfile = useMeetingStore(state => state.updateProfile);
+
+  // Local Profile State (for editing before save)
+  const [profile, setProfile] = useState(globalProfile);
   
+  useEffect(() => {
+    setProfile(globalProfile);
+  }, [globalProfile]);
+
   const fileInputRef = useRef(null);
 
   // Notifications State
@@ -30,6 +33,7 @@ const SettingsView = () => {
 
   const handleSaveProfile = (e) => {
     e.preventDefault();
+    updateProfile(profile);
     toast.success('Profile updated successfully!');
   };
 
@@ -37,7 +41,10 @@ const SettingsView = () => {
     const file = e.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setProfile(prev => ({ ...prev, avatarUrl: imageUrl }));
+      // Immediately save the image update to global state
+      const updatedProfile = { ...profile, avatarUrl: imageUrl };
+      setProfile(updatedProfile);
+      updateProfile(updatedProfile);
       toast.success('Profile photo updated!');
     }
   };
