@@ -6,6 +6,7 @@ import CalendarView from './components/views/CalendarView';
 import MeetingsView from './components/views/MeetingsView';
 import AnalyticsView from './components/views/AnalyticsView';
 import SettingsView from './components/views/SettingsView';
+import { useMeetingStore } from './store/meetingStore';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DatePicker from 'react-datepicker';
@@ -17,6 +18,7 @@ const App = () => {
   const [editMeetingData, setEditMeetingData] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeTab, setActiveTab] = useState('Dashboard');
+  const userProfile = useMeetingStore(state => state.userProfile);
 
   const handleEdit = (index, data) => {
     setEditingIndex(index);
@@ -183,9 +185,9 @@ const App = () => {
           </div>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold overflow-hidden border border-indigo-200">
-              <img src="https://ui-avatars.com/api/?name=Sarah+Jenkins&background=e0e7ff&color=4338ca" alt="Avatar" />
+              <img src={userProfile.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
             </div>
-            <span className="text-sm font-medium text-slate-700 hidden sm:block">Sarah Jenkins</span>
+            <span className="text-sm font-medium text-slate-700 hidden sm:block">{userProfile.firstName} {userProfile.lastName}</span>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
